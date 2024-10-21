@@ -1,6 +1,8 @@
 package dad.pepencil.controllers;
 
+import dad.pepencil.PepencilApp;
 import dad.pepencil.PepencilTab;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -28,6 +31,9 @@ public class RootController implements Initializable {
 
     @FXML
     private TabPane editionTabPane;
+
+    @FXML
+    private VBox emptyPane;
 
     @FXML
     private BorderPane root;
@@ -55,6 +61,16 @@ public class RootController implements Initializable {
 
         selectedTab.bind(editionTabPane.getSelectionModel().selectedItemProperty());
 
+        // comprobar si no hay pestañas abiertas
+        ListProperty<Tab> tabs = new SimpleListProperty<>(editionTabPane.getTabs());
+        emptyPane.visibleProperty().bind(Bindings.isEmpty(tabs));
+
+        selectedTab.addListener((o, ov, nv) -> {
+            if (nv != null) {
+                ((PepencilTab) nv).getController().requestFocus();
+            }
+        });
+
     }
 
     public BorderPane getRoot() {
@@ -75,6 +91,8 @@ public class RootController implements Initializable {
                 .forEach(tab -> {
                     if (tab.getController().close()) {
                         removedTabs.add(tab);
+                    } else {
+                        event.consume();
                     }
                 });
         editionTabPane.getTabs().removeAll(removedTabs);
@@ -100,7 +118,10 @@ public class RootController implements Initializable {
 
     @FXML
     void onExitAction(ActionEvent event) {
-
+        onCloseAllAction(event);
+        if (!event.isConsumed()) {
+            PepencilApp.primaryStage.close();
+        }
     }
 
     @FXML

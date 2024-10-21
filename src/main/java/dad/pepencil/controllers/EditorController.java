@@ -1,6 +1,6 @@
 package dad.pepencil.controllers;
 
-import dad.pepencil.PepencilTab;
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
@@ -11,12 +11,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -139,6 +137,10 @@ public class EditorController implements Initializable {
 
     public void redo() {
         editArea.redo();
+    }
+
+    public void requestFocus() {
+        Platform.runLater(() -> editArea.requestFocus());
     }
 
     // getters & setters
