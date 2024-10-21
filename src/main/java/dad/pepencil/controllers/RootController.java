@@ -14,6 +14,8 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class RootController implements Initializable {
@@ -64,13 +66,26 @@ public class RootController implements Initializable {
     }
 
     @FXML
-    void onClaseAllAction(ActionEvent event) {
-
+    void onCloseAllAction(ActionEvent event) {
+        List<Tab> removedTabs = new ArrayList<>();
+        editionTabPane
+                .getTabs()
+                .stream()
+                .map(tab -> (PepencilTab) tab)
+                .forEach(tab -> {
+                    if (tab.getController().close()) {
+                        removedTabs.add(tab);
+                    }
+                });
+        editionTabPane.getTabs().removeAll(removedTabs);
     }
 
     @FXML
     void onCloseAction(ActionEvent event) {
-
+        PepencilTab tab = (PepencilTab) selectedTab.get();
+        if (tab.getController().close()) {
+            editionTabPane.getTabs().remove(tab);
+        }
     }
 
     @FXML
@@ -102,17 +117,13 @@ public class RootController implements Initializable {
 
     @FXML
     void onOpenAction(ActionEvent event) {
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Todos los archivos (*.*)", "*.*"));
         File file = fileChooser.showOpenDialog(getRoot().getScene().getWindow());
         if (file != null) {
-
             PepencilTab tab = newTab();
             tab.getController().open(file);
-
         }
-
     }
 
     @FXML
@@ -127,25 +138,20 @@ public class RootController implements Initializable {
 
     @FXML
     void onSaveAction(ActionEvent event) {
-
         if (getSelectedEditor().getFile() != null)
             getSelectedEditor().save();
         else
             onSaveAsAction(event);
-
     }
 
     @FXML
     void onSaveAsAction(ActionEvent event) {
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Todos los archivos (*.*)", "*.*"));
         File file = fileChooser.showSaveDialog(getRoot().getScene().getWindow());
         if (file != null) {
-            getSelectedEditor().setFile(file);
-            getSelectedEditor().save();
+            getSelectedEditor().saveAs(file);
         }
-
     }
 
     @FXML

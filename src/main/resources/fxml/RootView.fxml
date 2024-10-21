@@ -7,17 +7,15 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.input.KeyCodeCombination?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
@@ -55,12 +53,59 @@
                            <accelerator>
                               <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
                            </accelerator>
+                           <graphic>
+                              <FontIcon iconLiteral="mdi2e-exit-to-app" iconSize="16" />
+                           </graphic>
                         </MenuItem>
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="_Editar">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Suprimir" />
+                    <MenuItem mnemonicParsing="false" text="Deshacer">
+                           <graphic>
+                              <FontIcon iconLiteral="mdi2u-undo" iconSize="16" />
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator></MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Rehacer">
+                           <graphic>
+                              <FontIcon iconLiteral="mdi2r-redo" iconSize="16" />
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="Y" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Cortar">
+                           <graphic>
+                              <FontIcon iconLiteral="mdi2c-content-cut" iconSize="16" />
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="X" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Copiar">
+                           <graphic>
+                              <FontIcon iconLiteral="mdi2c-content-copy" iconSize="16" />
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="C" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Pegar">
+                           <graphic>
+                              <FontIcon iconLiteral="mdi2c-content-paste" iconSize="16" />
+                           </graphic>
+                           <accelerator>
+                              <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                           </accelerator>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false" text="Eliminar">
+                           <graphic>
+                              <FontIcon />
+                           </graphic>
+                        </MenuItem>
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Ay_uda">
@@ -104,7 +149,7 @@
                         <Tooltip text="Cerrar" />
                      </tooltip>
                   </Button>
-                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="163.0" layoutY="10.0" mnemonicParsing="false" onAction="#onClaseAllAction" text="Cerrar todos">
+                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="163.0" layoutY="10.0" mnemonicParsing="false" onAction="#onCloseAllAction" text="Cerrar todos">
                      <graphic>
                         <FontIcon iconLiteral="mdi2c-close-box-multiple" iconSize="24" />
                      </graphic>
@@ -120,20 +165,20 @@
                         <Insets left="3.0" />
                      </padding>
                   </Separator>
-                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="212.0" layoutY="10.0" mnemonicParsing="false" onAction="#onCopyAction" text="Copiar">
-                     <graphic>
-                        <FontIcon iconLiteral="mdi2c-content-copy" iconSize="24" />
-                     </graphic>
-                     <tooltip>
-                        <Tooltip text="Copiar" />
-                     </tooltip>
-                  </Button>
                   <Button contentDisplay="GRAPHIC_ONLY" layoutX="300.0" layoutY="10.0" mnemonicParsing="false" onAction="#onCutAction" text="Cortar">
                      <graphic>
                         <FontIcon iconLiteral="mdi2c-content-cut" iconSize="24" />
                      </graphic>
                      <tooltip>
                         <Tooltip text="Cortar" />
+                     </tooltip>
+                  </Button>
+                  <Button contentDisplay="GRAPHIC_ONLY" layoutX="212.0" layoutY="10.0" mnemonicParsing="false" onAction="#onCopyAction" text="Copiar">
+                     <graphic>
+                        <FontIcon iconLiteral="mdi2c-content-copy" iconSize="24" />
+                     </graphic>
+                     <tooltip>
+                        <Tooltip text="Copiar" />
                      </tooltip>
                   </Button>
                   <Button contentDisplay="GRAPHIC_ONLY" layoutX="351.0" layoutY="10.0" mnemonicParsing="false" onAction="#onPasteAction" text="Pegar">
@@ -169,19 +214,6 @@
       </VBox>
    </top>
    <center>
-      <TabPane fx:id="editionTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER">
-        <tabs>
-          <Tab text="Untitled Tab 1">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
-          <Tab text="Untitled Tab 2">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
-        </tabs>
-      </TabPane>
+      <TabPane fx:id="editionTabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
