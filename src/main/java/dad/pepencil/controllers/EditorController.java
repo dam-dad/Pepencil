@@ -48,8 +48,6 @@ public class EditorController implements Initializable {
 
         // bindings
 
-        file.addListener(this::onFileChanged);
-
         editArea.textProperty().bindBidirectional(content);
 
         content.addListener(this::onContentChanged);
@@ -68,12 +66,6 @@ public class EditorController implements Initializable {
         hasChanges.set(true);
     }
 
-    private void onFileChanged(Observable o, File ov, File nv) {
-        if (nv != null) {
-            open();
-        }
-    }
-
     private String updateName() {
         return
                 (file.get() == null ? "Untitled" : file.get().getName()) +
@@ -82,13 +74,32 @@ public class EditorController implements Initializable {
 
     // logic
 
-    public void open() {
+    private void open() {
         try {
             this.content.set(Files.readString(file.get().toPath()));
             this.hasChanges.set(false);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void open(File file) {
+        setFile(file);
+        open();
+    }
+
+    public void save() {
+        try {
+            Files.writeString(file.get().toPath(), content.get());
+            this.hasChanges.set(false);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void saveAs(File file) {
+        setFile(file);
+        save();
     }
 
     public void cut() {
