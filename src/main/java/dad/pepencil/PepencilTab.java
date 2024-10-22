@@ -13,10 +13,11 @@ public class PepencilTab extends Tab {
         controller = new EditorController();
         setContent(controller.getRoot());
         textProperty().bind(controller.nameProperty());
-        setOnCloseRequest(this::onCloseRequest);
+        setOnCloseRequest(this::onCloseRequest); // captura el evento de cierre de la pestaña
     }
 
     private void onCloseRequest(Event event) {
+        // si no se puede cerrar, consumimos el evento (así no se cerrará la pestaña)
         if (!controller.close()) {
             event.consume();
         }

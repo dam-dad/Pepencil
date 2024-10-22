@@ -13,6 +13,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class RootController implements Initializable {
 
     // model
 
-    private final ObjectProperty<Tab> selectedTab = new SimpleObjectProperty<>();
+    private final ObjectProperty<PepencilTab> selectedTab = new SimpleObjectProperty<>();
 
     // view
 
@@ -55,19 +56,21 @@ public class RootController implements Initializable {
         editionTabPane.getTabs().clear();
 
         // inicializamos el editor con un fichero nuevo
-        newTab();
+        //newTab(); // ya no quiero que se abra una pestaña al iniciar la aplicación
 
         // bindings
 
-        selectedTab.bind(editionTabPane.getSelectionModel().selectedItemProperty());
+        selectedTab.bind(editionTabPane.getSelectionModel().selectedItemProperty().map(tab -> (PepencilTab) tab));
 
-        // comprobar si no hay pestañas abiertas
+        // crea una lista observable con las pestañas del TabPane ...
         ListProperty<Tab> tabs = new SimpleListProperty<>(editionTabPane.getTabs());
+        // ... de modo que si la lista está vacía, se muestra el panel vacío
         emptyPane.visibleProperty().bind(Bindings.isEmpty(tabs));
 
+        // cuando se seleccione una pestaña, se le da el foco a su editor
         selectedTab.addListener((o, ov, nv) -> {
             if (nv != null) {
-                ((PepencilTab) nv).getController().requestFocus();
+                nv.getController().requestFocus();
             }
         });
 
@@ -118,10 +121,9 @@ public class RootController implements Initializable {
 
     @FXML
     void onExitAction(ActionEvent event) {
-        onCloseAllAction(event);
-        if (!event.isConsumed()) {
-            PepencilApp.primaryStage.close();
-        }
+        // inyecta el evento de cierre de la ventana principal (es como pulsar el botón "X" de la ventana)
+        // así me ahorro implementar la funcionalidad dos veces
+        PepencilApp.primaryStage.fireEvent(new WindowEvent(PepencilApp.primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 
     @FXML
@@ -178,6 +180,15 @@ public class RootController implements Initializable {
     @FXML
     void onUndoAction(ActionEvent event) {
         getSelectedEditor().undo();
+    }
+
+    public boolean canClose() {
+        return editionTabPane
+                .getTabs()
+                .stream()
+                .map(tab -> (PepencilTab) tab)
+                .map(PepencilTab::getController)
+                .noneMatch(EditorController::hasChanges);
     }
 
 }
